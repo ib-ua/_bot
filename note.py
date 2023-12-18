@@ -1,35 +1,53 @@
 class Note:
 
-    def __init__(self, content, title):
+    def __init__(self, content, title, tags):
         if content and isinstance(content, str):
-            self._content = content
+            self.__content = content
         else:
-            self._content = None
+            self.__content = None
 
         if title and isinstance(title, str):
-            self._title = title
+            self.__title = title
         else:
-            self._title = None
+            self.__title = None
+
+        self.__tags = tags if tags else []
 
     @property
     def content(self):
-        return self._content
+        return self.__content
     
     @property
     def title(self):
-        return self._title
+        return self.__title
+    
+    @property
+    def tags(self):
+        return self.__tags
     
     def set_content(self, content):
-        self._content = content if (content and isinstance(content, str)) else None
+        self.__content = content if (content and isinstance(content, str)) else None
     
     def set_title(self, title):
-        self._title = title if (title and isinstance(title, str)) else None
+        self.__title = title if (title and isinstance(title, str)) else None
     
     def edit_content(self, content):
         self.set_content(content)
     
     def edit_title(self, title):
         self.set_title(title)
+
+    def add_tag(self, tag):
+        if tag in self.__tags:
+            return False
+        self.__tags.append(tag)
+        return True
+
+    def delete_tag(self, tag):
+        if tag in self.__tags:
+            self.__tags.remove(tag)
+            return True
+        return False
 
     def __eq__(self, note):
         if isinstance(note, Note):
