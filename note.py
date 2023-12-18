@@ -25,17 +25,19 @@ class Note:
     def tags(self):
         return self.__tags
     
-    def set_content(self, content):
+    @content.setter
+    def content(self, content):
         self.__content = content if (content and isinstance(content, str)) else None
     
-    def set_title(self, title):
+    @title.setter
+    def title(self, title):
         self.__title = title if (title and isinstance(title, str)) else None
     
     def edit_content(self, content):
-        self.set_content(content)
+        self.content = content
     
     def edit_title(self, title):
-        self.set_title(title)
+        self.title = title
 
     def add_tag(self, tag):
         if tag in self.__tags:

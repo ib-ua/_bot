@@ -1,6 +1,4 @@
-from note import Note
-
-class Note_book:
+class NoteBook:
     def __init__(self):
         self.__notes = {}
     
@@ -9,7 +7,7 @@ class Note_book:
         return self.__notes
     
     @notes.setter
-    def set_notes(self, notes):
+    def notes(self, notes):
         if notes is not None and type(notes) is dict:
             self.__notes = notes
         else:
@@ -57,7 +55,7 @@ class Note_book:
         return found_notes
     
     def sort_notes_by_tags(self):
-        sorted_book = Note_book()
+        sorted_book = NoteBook()
 
         for author, notes in self.__notes.items():
             sorted_notes = sorted(notes, key=lambda note: tuple(note.tags))
@@ -73,4 +71,3 @@ class Note_book:
                     notes.remove(existing_note)
                     return True
         return False 
-    
