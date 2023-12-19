@@ -1,11 +1,11 @@
 import re
-from contact_classes.Field import Field
+from models import field
 
 
 
-class Email(Field):
+class Email(field):
 
-        @Field.value.setter
+        @field.value.setter
         def value(self, value):
             pattern = r"[A-Za-z][A-Za-z0-9._]+@[A-Za-z]+\.[A-Za-z]{2,}"
             if re.match(pattern, value) is not None:

@@ -1,10 +1,10 @@
 from datetime import datetime
-from contact_classes.Field import Field
+from bot import field
 
 
-class Birthday(Field):
+class Birthday(field):
 
-    @Field.value.setter
+    @field.value.setter
     def value(self, value):
         today = datetime.now().date()
         try:

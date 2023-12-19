@@ -1,5 +1,5 @@
 from bot.controller.InputProcessor import InputProcessor
-from bot.models.AddressBook import AddressBook
+from models import AddressBook
 
 
 class Bot:

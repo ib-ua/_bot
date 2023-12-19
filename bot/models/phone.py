@@ -1,8 +1,8 @@
-from contact_classes.Field import Field
+from models import field
 
-class Phone(Field):
+class Phone(field):
 
-    @Field.value.setter
+    @field.value.setter
     def value(self, value):
         if value.startswith('+') and len(value[1:]) == 12 and value[1:].isdigit() or value.isdigit() and len(value) in \
                 (10, 12):

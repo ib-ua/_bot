@@ -1,6 +1,6 @@
 import re
 from collections import UserDict
-from bot.models.AddressBook import AddressBook
+from models import AddressBook
 
 
 class InputProcessor(UserDict):

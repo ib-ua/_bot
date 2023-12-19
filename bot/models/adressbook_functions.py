@@ -1,13 +1,13 @@
-from contact_classes import Phone, Address_book, Birthday, Email, Phone, Record, Name, Address
+# from contact_classes import address_book
+from bot import *
 
-address_book_instance = Address_book.AddressBook()
-record_instance = Record
-phone_instance = Phone
-birthday_instance = Birthday
-name_instance = Name
-email_instance = Email
-address_instance = Address
-# add_address_record = Record.Record.add_record()
+address_book_instance = address_book.AddressBook()
+record_instance = record
+phone_instance = phone
+birthday_instance = birthday
+name_instance = name
+email_instance = email
+address_instance = address
 
 
 def parse(user_input, commands):
@@ -37,11 +37,11 @@ def input_error(func):
             return 'IndexError: Please enter a name followed by a phone.'
         except TypeError:
             return 'You have entered invalid number of arguments for this command.'
-        except Phone.PhoneInvalidFormatError:
+        except phone.PhoneInvalidFormatError:
             return 'Invalid phone format. Please use one of format examples: +380951112233, 380951112233 or 0951112233'
-        except Birthday.BirthdayInvalidFormatError:
+        except birthday.BirthdayInvalidFormatError:
             return 'Invalid birthday format. Please enter the birthday in the format YYYY-MM_DD'
-        except Email.EmailInvalidFormatError:
+        except email.EmailInvalidFormatError:
             return 'Invalid email format.'
 
     return inner
