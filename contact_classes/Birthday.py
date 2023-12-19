@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from contact_classes.Field import Field
 
 
@@ -15,7 +15,7 @@ class Birthday(Field):
             self._value = value
         else:
             raise BirthdayInvalidFormatError('Invalid birthday format. Please enter the birthday'
-                                             ' in the format YYYY-MM_DD')
+                                             ' in the format YYYY-MM-DD')
         
 class BirthdayInvalidFormatError(Exception):
     pass

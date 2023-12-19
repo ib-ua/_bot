@@ -1,6 +1,14 @@
 from contact_classes import Phone, Address_book, Birthday, Email, Phone, Record, Name, Address
 
 address_book_instance = Address_book.AddressBook()
+record_instance = Record
+phone_instance = Phone
+birthday_instance = Birthday
+name_instance = Name
+email_instance = Email
+address_instance = Address
+# add_address_record = Record.Record.add_record()
+
 
 def parse(user_input, commands):
     command = None
@@ -10,7 +18,7 @@ def parse(user_input, commands):
             len_command = len(elem.split(' '))
             user_input_list = user_input.split(' ')
             args = user_input_list[len_command:]
-            break   
+            break
         if command is None:
             args = None
     return command, args
@@ -40,79 +48,78 @@ def input_error(func):
 
 @input_error
 def add_contact(name, phone=None, birthday=None):
-   
     if name in address_book_instance.data.keys():
         if phone is None:
-            return f'A contact with name {name} already exists.'
+            return f'A contact with named {name} already exists.'
         else:
-            address_book_instance.data[name].add_phone(Phone(phone))
+            address_book_instance.data[name].add_phone(phone_instance.Phone(phone))
             if birthday is None:
                 return f'Phone number {phone} has been assigned to contact named {name}.'
             else:
-                address_book_instance.data[name].add_birthday(Birthday(birthday))
+                address_book_instance.data[name].add_birthday(birthday_instance.Birthday(birthday))
                 return f'Phone number {phone} and birthday {birthday} have been assigned to contact named {name}.'
     else:
         if phone is None:
-            record = Record(Name(name))
-            Address_book.add_record(record)
+            record = record_instance.Record(name_instance.Name(name))
+            address_book_instance.add_record(record)
             return f'Contact named {name} has been added.'
         else:
             if birthday is None:
-                record = Record(Name(name))
-                record.add_phone(Phone(phone))
-                Address_book.add_record(record)
+                record = record_instance.Record(name_instance.Name(name))
+                record.add_phone(phone_instance.Phone(phone))
+                address_book_instance.add_record(record)
                 return f'Contact named {name} with a phone number {phone} has been added.'
             else:
-                record = Record(Name(name), Birthday(birthday))
-                record.add_phone(Phone(phone))
-                Address_book.add_record(record)
+                record = record_instance.Record(name_instance.Name(name), birthday_instance.Birthday(birthday))
+                record.add_phone(phone_instance.Phone(phone))
+                address_book_instance.add_record(record)
                 return f"Contact named {name} with a phone number {phone} and {birthday} birthday has been added."
 
 
 @input_error
 def add_birthday(name, birthday):
-    Address_book.data[name].add_birthday(Birthday(birthday))
+    address_book_instance.data[name].add_birthday(birthday_instance.Birthday(birthday))
     return f"{name}'s birthday {birthday} has been added."
 
 
 @input_error
 def add_email(name, email):
-    Address_book.data[name].add_email(Email(email))
+    address_book_instance.data[name].add_email(email_instance.Email(email))
     return f"Email {email} for {name} has been added."
 
 
 @input_error
 def add_address(name, *address_args):
     address = ' '.join([*address_args])
-    Address_book.data[name].add_address(Address(address))
-    return f"The address {address} for {name} has been added."
+    address_book_instance.data[name].add_address(address_instance.Address(address))
+    return f"The address {address} for {name} has been added."  
 
 
 @input_error
 def change_contact(name, old_phone, new_phone):
-    Address_book.data[name].remove_phone(Phone(old_phone))
-    Address_book.data[name].add_phone(Phone(new_phone))
+    address_book_instance.data[name].remove_phone(Phone(old_phone))
+    address_book_instance.data[name].add_phone(Phone(new_phone))
     return f"{name}'s phone number is now {new_phone}."
 
 
 @input_error
 def show_all(data=address_book_instance.data):
     phone_book = ''
-    for name, info in address_book_instance.data.items():
+    for name, info in data.items():
         phones = '--Phone numbers:\n'
-        if address_book_instance.data[name].phones:
-            for phone in address_book_instance.data[name].phones:
+        if data[name].phones:
+            for phone in data[name].phones:
                 phones += f'{phone.value}\n'
         else:
             phones += 'No phone numbers to display\n'
         phone_book += f'\n{name} ->\n{phones}'
-        birthday = address_book_instance.data[name].birthday
+        birthday = data[name].birthday
         if birthday is not None:
-            phone_book += f'--birthday:\n{birthday.value}\n--days to birthday:\n{address_book_instance.data[name].days_to_birthday()}\n'
-        email = address_book_instance.data[name].email
+            phone_book += f'--birthday:\n{birthday.value}\n--days to birthday:\n{data[name].days_to_birthday()}\n'
+        email = data[name].email
         if email is not None:
             phone_book += f'--Emails:\n{email.value}\n'
-        address = address_book_instance.data[name].address
+        address = data[name].address
         if address is not None:
             phone_book += f'--Address:\n{address.value}\n'
     return phone_book
@@ -129,6 +136,7 @@ def end():
 
 
 def get_help():
+    print("hello / hi".ljust(40), "to greet bot".rjust(80))
     print("Phone Book Commands".center(120, '-'))
     print("add <name> followed by a 12-digit <phone number> and <address>".ljust(80), "to add the data to your "
                                                                                        f"Book of Contacts".center(40))
@@ -145,10 +153,8 @@ def get_help():
     print("".center(120, "_"))
 
     print("General Commands".center(120, "-"))
-    print("hello / hi".ljust(40), "to greet CLIB".rjust(80))
 
-    print("goodbye, close, or exit".ljust(40), "to quit the program and terminate the Command Line Interface "
-                                                "Bot".rjust(80))
+    print("goodbye, close, or exit".ljust(40).rjust(80))
     print("".center(120, "_"))
 
     return ""
