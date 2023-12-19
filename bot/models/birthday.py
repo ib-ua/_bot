@@ -1,10 +1,10 @@
 from datetime import datetime
-from bot import field
+from bot.models.field import Field
 
 
-class Birthday(field):
+class Birthday(Field):
 
-    @field.value.setter
+    @Field.value.setter
     def value(self, value):
         today = datetime.now().date()
         try:
@@ -16,6 +16,7 @@ class Birthday(field):
         else:
             raise BirthdayInvalidFormatError('Invalid birthday format. Please enter the birthday'
                                              ' in the format YYYY-MM-DD')
-        
+
+
 class BirthdayInvalidFormatError(Exception):
     pass

@@ -1,17 +1,17 @@
 import re
-from models import field
+from bot.models.field import Field
 
 
+class Email(Field):
 
-class Email(field):
+    @Field.value.setter
+    def value(self, value):
+        pattern = r"[A-Za-z][A-Za-z0-9._]+@[A-Za-z]+\.[A-Za-z]{2,}"
+        if re.match(pattern, value) is not None:
+            self._value = value
+        else:
+            raise EmailInvalidFormatError('Invalid email format')
 
-        @field.value.setter
-        def value(self, value):
-            pattern = r"[A-Za-z][A-Za-z0-9._]+@[A-Za-z]+\.[A-Za-z]{2,}"
-            if re.match(pattern, value) is not None:
-                self._value = value
-            else:
-                raise EmailInvalidFormatError('Invalid email format')
 
 class EmailInvalidFormatError(Exception):
     pass

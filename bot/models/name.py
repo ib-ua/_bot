@@ -1,5 +1,5 @@
-from models import field
+from bot.models.field import Field
 
 
-class Name(field):
+class Name(Field):
     pass

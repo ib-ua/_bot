@@ -1,4 +1,5 @@
-from models import field
+from bot.models.field import Field
 
-class Address(field):
+
+class Address(Field):
     pass
