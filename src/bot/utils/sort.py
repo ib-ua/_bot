@@ -1,6 +1,7 @@
 import os
 import shutil
 
+
 def normalize(text):
     char_map = {
         'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'д': 'd', 'е': 'e', 'є': 'ye', 'ж': 'zh',
@@ -9,7 +10,7 @@ def normalize(text):
         'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ю': 'yu', 'я': 'ya'
     }
 
-    text = text.lower()  # Переведення тексту у нижній регістр перед транслітерацією
+    text = text.lower()  # Converting text to lowercase before transliteration
     result = []
 
     for char in text:
@@ -23,7 +24,7 @@ def normalize(text):
     return ''.join(result)
 
 
-# Функція для сортування файлів
+# Function for sorting files
 def sort_files(folder_path):
     extensions = {
         'images': ('JPEG', 'PNG', 'JPG', 'SVG'),
@@ -58,6 +59,7 @@ def sort_files(folder_path):
                 unknown_extensions.add(file_extension)
 
     return known_extensions, unknown_extensions
+
 
 if __name__ == "__main__":
     import sys
