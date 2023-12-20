@@ -1,5 +1,5 @@
 from datetime import datetime
-from bot.models.field import Field
+from .field import Field
 
 
 class Birthday(Field):
@@ -12,7 +12,7 @@ class Birthday(Field):
         except ValueError:
             birthday = None
         if birthday is not None and birthday < today:
-            self._value = value
+            self.__value = value
         else:
             raise BirthdayInvalidFormatError('Invalid birthday format. Please enter the birthday'
                                              ' in the format YYYY-MM-DD')

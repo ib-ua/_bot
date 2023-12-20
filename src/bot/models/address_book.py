@@ -1,17 +1,18 @@
 from collections import UserDict
 from pathlib import Path
-from bot.models import data_transfer
+from .data_transfer import DataTransferService
 
 
 class AddressBook(UserDict):
     def __init__(self, name='data'):
         super().__init__()
-        self.is_open = True
         self.name = name
+        self.data_transfer_service = DataTransferService(Path(self.name + '.bin'))
+        self.path = None
+        self.is_open = True
+
     def save_data(self):
-        self.path = datatransfer_instance.DataTransfer(Path(self.name + '.bin'))
-        # data_saver = datatransfer_instance.DataTransfer('address_book.bin')
-        self.path.save_data(self.data)
+        self.data_transfer_service.save_data(self.data)
 
     def add_record(self, record):
         self.data[record.name.value] = record
@@ -37,4 +38,3 @@ class AddressBook(UserDict):
     def close(self):
         self.is_open = False
         return "Bye!"
-

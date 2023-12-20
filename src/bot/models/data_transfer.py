@@ -1,7 +1,8 @@
 from pathlib import Path
 from pickle import load, dump
 
-class DataTransfer:
+
+class DataTransferService:
 
     def __init__(self, filename):
         self.filename = filename

@@ -1,4 +1,4 @@
-from bot.models.field import Field
+from .field import Field
 
 
 class Address(Field):

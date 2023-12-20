@@ -25,7 +25,6 @@ def parse(user_input, commands):
 
 
 def input_error(func):
-
     def inner(*args):
         try:
             return func(*args)
@@ -45,6 +44,7 @@ def input_error(func):
             return 'Invalid email format.'
 
     return inner
+
 
 @input_error
 def add_contact(name, phone=None, birthday=None):
@@ -92,7 +92,7 @@ def add_email(name, email):
 def add_address(name, *address_args):
     address = ' '.join([*address_args])
     address_book_instance.data[name].add_address(address_instance.Address(address))
-    return f"The address {address} for {name} has been added."  
+    return f"The address {address} for {name} has been added."
 
 
 @input_error
@@ -124,8 +124,10 @@ def show_all(data=address_book_instance.data):
             phone_book += f'--Address:\n{address.value}\n'
     return phone_book
 
+
 def write_file():
     address_book_instance.save_data()
+
 
 def greeting():
     return 'Hello! How can I help you?'
@@ -139,15 +141,14 @@ def get_help():
     print("hello / hi".ljust(40), "to greet bot".rjust(80))
     print("Phone Book Commands".center(120, '-'))
     print("add <name> followed by a 12-digit <phone number> and <address>".ljust(80), "to add the data to your "
-                                                                                       f"Book of Contacts".center(40))
+                                                                                      f"Book of Contacts".center(40))
 
     print("add birthday <name> <birthday, format YYYY-MM-DD>".ljust(80), "to add a birthday to a contact".rjust(40))
     print("add email <name> <email>".ljust(40), "to add the email to a specified contact".rjust(80))
     print("add address <name> <address>".ljust(40), "to add the address to a specified contact".rjust(80))
     print("change phone <name> <old phone> <new phone>".ljust(60), "to change the phone number of a "
-                                                              "specified contact".rjust(60))
+                                                                   "specified contact".rjust(60))
 
-   
     print("show all".ljust(40), "to see all the contact details in your Book of Contacts".rjust(80))
 
     print("".center(120, "_"))

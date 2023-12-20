@@ -1,5 +1,5 @@
 import re
-from bot.models.field import Field
+from .field import Field
 
 
 class Email(Field):
@@ -8,7 +8,7 @@ class Email(Field):
     def value(self, value):
         pattern = r"[A-Za-z][A-Za-z0-9._]+@[A-Za-z]+\.[A-Za-z]{2,}"
         if re.match(pattern, value) is not None:
-            self._value = value
+            self.__value = value
         else:
             raise EmailInvalidFormatError('Invalid email format')
 

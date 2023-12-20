@@ -1,12 +1,12 @@
 class Field:
     def __init__(self, value):
-        self._value = None
+        self.__value = None
         self.value = value
 
     @property
     def value(self):
-        return self._value
+        return self.__value
 
     @value.setter
     def value(self, value):
-        self._value = value
+        self.__value = value
