@@ -1,4 +1,4 @@
-from bot.Bot import Bot
+from .bot import Bot
 
 
 def main(name='data'):
