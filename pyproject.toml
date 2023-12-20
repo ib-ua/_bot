@@ -4,15 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "t21_bot"
-dynamic = ["version"]
+version = "0.0.1"
 authors = [
-    { name="Ievgen Bardadym", email="ievgen.bardadym@gmail.com" }
+    { name="Ievgen Bardadym", email="ievgen.bardadym@gmail.com" },
+    { name="Zakhar Kryverko", email="krivtnzakhar1@gmail.com" },
+    { name="Oleksii Tryhub", email="flairim.oll@gmail.com" },
+    { name="Denys Petrovskyi", email="dwp2004@icloud.com"}
 ]
 description = "Bot assistant"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
@@ -22,6 +25,12 @@ Homepage = "https://github.com/ib-ua/_bot"
 Issues = "https://github.com/ib-ua/_bot/issues"
 
 [project.scripts]
-bot = "bot.main:main"
+bot = "bot.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["bot*"]
+exclude = ["tests*"]
+namespaces = false
 
 
