@@ -31,7 +31,7 @@ class InputProcessor(UserDict):
 
     def process(self, user_input: str) -> str:
         [command, *args] = re.split(r'\s+', user_input.strip())
-        return self.data.get(type(self.context), self[None]).get(command, lambda x: "Command not found")(args)
+        return self.data.get(type(self.context), self.data[None]).get(command, lambda x: "Command not found")(args)
 
     def create_contact(self, name: str):
         self.context = Record(name)
