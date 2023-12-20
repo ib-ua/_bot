@@ -2,7 +2,7 @@ from collections import UserDict
 from pathlib import Path
 from bot.models import data_transfer
 
-datatransfer_instance = data_transfer
+
 class AddressBook(UserDict):
     def __init__(self, name='data'):
         super().__init__()
