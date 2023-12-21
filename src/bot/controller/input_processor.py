@@ -5,6 +5,10 @@ from typing import List
 
 from ..models import AddressBook
 from ..models import NoteBook
+from ..models.note import Note
+from ..models.title import Title
+from ..models.content import Content
+from ..models.tag import Tag
 from ..models.name import Name
 from ..models.record import Record
 from ..models.birthday import Birthday
@@ -38,8 +42,14 @@ class InputProcessor(UserDict):
             'exit': lambda args: self.address_book.close(),
             'hello': lambda args: 'Hello',
             'add-contact': lambda args: self.create_contact(*args),
-            'edit-contact': lambda args: self.edit_contact(*args)
-
+            'edit-contact': lambda args: self.edit_contact(*args),
+            'add-note': lambda args: self.add_note(*args),
+            'edit-note': lambda args: self.edit_note(*args),
+            'get-all-notes': lambda args: self.get_all_notes(),
+            'remove-note': lambda args: self.remove_note(*args),
+            'get-note-by-title': lambda args: self.get_note_by_title(*args),
+            'get-notes-by-tag': lambda args: self.get_notes_by_tag(*args),
+            'get-notes-by-term': lambda args: self.get_notes_by_term(*args),
         }
 
         self.data[Record] = {
@@ -52,11 +62,20 @@ class InputProcessor(UserDict):
             'exit': lambda args: self.address_book.close(),
         }
 
+        self.data[Note] = {
+            'set-content': lambda args: self.set_content(*args),
+            'add-tag': lambda args: self.add_tag(*args),
+            'remove-tag': lambda args: self.remove_tag(*args),
+            'apply': lambda args: self.complete_work_on_note(),
+            'discard': lambda args: self.cancel_work_on_note(),
+            'exit': lambda args: self.address_book.close(),
+        }
+
     def get_commands(self) -> List[str]:
         return list(self.data.get(type(self.context), self.data[None]).keys())
 
     def process(self, user_input: str) -> str:
-        [command, *args] = re.split(r'\s+', user_input.strip())
+        [command, *args] = re.split(r'\s+', user_input.strip(), 1)
         return self.data.get(type(self.context), self.data[None]).get(command, lambda x: "Command not found")(args)
 
     def create_contact(self, name: str):
@@ -95,6 +114,62 @@ class InputProcessor(UserDict):
     def cancel_work_on_record(self):
         self.context = None
         return 'Creating contact canceled'
+    
+    def add_note(self, value):
+        note = Note(Title(value))
+        self.context = note
+        return 'Creating note'
+    
+    def edit_note(self, title: str):
+        note = self.note_book.get(title)
+        if note is None:
+            raise ValueError({'message': f'No note with title "{title}"'})
+        self.context = copy.deepcopy(note)
+        return f'Start editing note "{title}"'
+
+    def complete_work_on_note(self):
+        self.note_book.add_note(self.context)
+        self.context = None
+        return 'Note saved successfully'
+    
+    def cancel_work_on_note(self):
+        self.context = None
+        return 'Creating note canceled'
+    
+    def set_content(self, value: str):
+        content = Content(value)
+        self.context.content = content
+        return f'Content was added successfully to note "{self.context.title}"'
+    
+    def add_tag(self, value: str):
+        tag = Tag(value)
+        self.context.add_tag(tag)
+        return f'Tag "{tag}" was added successfully to note "{self.context.title}"'
+
+    def get_all_notes(self):
+        return "\n".join([repr(note) for note in self.note_book.values()])
+    
+    def remove_note(self, value):
+        note = self.note_book.find_note_by_title(value)
+        self.note_book.delete_note(note)
+        return 'Note was successfully deleted'
+    
+    def remove_tag(self, value):
+        for tag in self.context.tags:
+            if tag.value == value:
+                self.context.delete_tag(tag)
+                return f'Tag "{value}" was successfully deleted'
+        return f'Failed to delete tag "{value}"'
+        
+    def get_note_by_title(self, title):
+        return repr(self.note_book.find_note_by_title(title))
+    
+    def get_notes_by_tag(self, tag):
+        return "\n".join([repr(note) for note in self.note_book.find_notes_by_tag(tag)])
+
+    def get_notes_by_term(self, term):
+        return "\n".join([repr(note) for note in self.note_book.find_note_by_term(term)])
+
 
     @input_error
     def edit_contact(self, contact_name: str):
