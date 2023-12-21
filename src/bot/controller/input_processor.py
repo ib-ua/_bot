@@ -20,13 +20,13 @@ def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except EmailInvalidFormatError:
-            return Fore.RED + 'Invalid email format.'
         except ValueError as e:
             error_message = 'Value error occurred.'
             if type(e.args[0]) is dict and 'message' in e.args[0]:
                 error_message = e.args[0]['message']
-            return error_message
+            return Fore.RED + error_message
+        except EmailInvalidFormatError:
+            return Fore.RED + 'Invalid email format.'
         except BirthdayInvalidFormatError:
             return Fore.RED + 'Invalid birthday format. Please enter the birthday in the format DD.MM.YYYY'
         except PhoneInvalidFormatError:
@@ -122,11 +122,11 @@ class InputProcessor(UserDict):
     def complete_work_on_record(self):
         self.address_book.add_record(self.context)
         self.context = None
-        return 'Contact saved successfully'
+        return Fore.GREEN + 'Contact saved successfully'
 
     def cancel_work_on_record(self):
         self.context = None
-        return 'Creating contact canceled'
+        return Fore.RED + 'Creating contact canceled'
 
     @input_error
     def edit_contact(self, contact_name: str):
