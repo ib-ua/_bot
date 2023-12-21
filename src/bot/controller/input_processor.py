@@ -1,8 +1,8 @@
 import copy
 import re
+from colorama import Fore
 from collections import UserDict
 from typing import List
-
 from ..models import AddressBook
 from ..models import NoteBook
 from ..models.note import Note
@@ -13,21 +13,28 @@ from ..models.name import Name
 from ..models.record import Record
 from ..models.birthday import Birthday
 from ..models.email import Email, EmailInvalidFormatError
+from ..models.phone import Phone, PhoneInvalidFormatError
+from ..models.birthday import Birthday, BirthdayInvalidFormatError
+from ..models.phone import Phone, PhoneInvalidFormatError
+from ..models.birthday import Birthday, BirthdayInvalidFormatError
 from ..utils.sort import start
+
 
 def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except EmailInvalidFormatError:
-            return 'Invalid email format.'
         except ValueError as e:
             error_message = 'Value error occurred.'
             if type(e.args[0]) is dict and 'message' in e.args[0]:
                 error_message = e.args[0]['message']
-
-            return error_message
-
+            return Fore.RED + error_message
+        except EmailInvalidFormatError:
+            return Fore.RED + 'Invalid email format.'
+        except BirthdayInvalidFormatError:
+            return Fore.RED + 'Invalid birthday format. Please enter the birthday in the format DD.MM.YYYY'
+        except PhoneInvalidFormatError:
+            return Fore.RED + 'Invalid phone format. Please use one of format examples: +380951112233, 380951112233 or 0951112233'
     return inner
 
 
@@ -43,6 +50,7 @@ class InputProcessor(UserDict):
             'hello': lambda args: 'Hello',
             'add-contact': lambda args: self.create_contact(*args),
             'edit-contact': lambda args: self.edit_contact(*args),
+            'show-contacts': lambda args: self.get_all_contacts(*args)
             'sort-files' : lambda args: self.sort(),
             'add-note': lambda args: self.add_note(*args),
             'edit-note': lambda args: self.edit_note(*args),
@@ -50,7 +58,8 @@ class InputProcessor(UserDict):
             'remove-note': lambda args: self.remove_note(*args),
             'get-note-by-title': lambda args: self.get_note_by_title(*args),
             'get-notes-by-tag': lambda args: self.get_notes_by_tag(*args),
-            'get-notes-by-term': lambda args: self.get_notes_by_term(*args),
+            'get-notes-by-term': lambda args: self.get_notes_by_term(*args)
+        }
 
 
         self.data[Record] = {
@@ -79,10 +88,11 @@ class InputProcessor(UserDict):
         [command, *args] = re.split(r'\s+', user_input.strip(), 1)
         return self.data.get(type(self.context), self.data[None]).get(command, lambda x: "Command not found")(args)
 
+    @input_error
     def create_contact(self, name: str):
         record = Record(Name(name))
         self.context = record
-        return f'Creating "{record.name}"'
+        return Fore.GREEN + f'Creating "{record.name}"'
     
     def sort(self, *args):
         if not args:
@@ -93,38 +103,45 @@ class InputProcessor(UserDict):
             folder = args[0]
         return start(folder)
 
-
-    def add_phone(self, phone: str):
+    @input_error
+    def add_phone(self, phone_str: str):
+        phone = Phone(phone_str)
         record = self.context
         record.add_phone(phone)
-        print(phone)
+        return Fore.GREEN + f'Phone number "{phone}" added to contact "{record.name}"'
 
+    @input_error
     def add_birthday(self, birthday_str: str):
         record = self.context
         birthday = Birthday(birthday_str)
         record.add_birthday(birthday)
-        print(birthday)
+        return Fore.GREEN + f'Birthday date "{birthday}" added to contact "{record.name}"'
 
     @input_error
     def add_email(self, email_str: str):
         email = Email(email_str)
         record = self.context
         record.add_email(email)
-        return f'"{email}" added to contact "{record.name}"'
-
+        return Fore.GREEN + f'E-mail "{email}" added to contact "{record.name}"'
+    
+    @input_error
     def add_address(self, address: str):
         record = self.context
         record.add_address(address)
-        print(address)
+        return Fore.GREEN + f'Address "{address}" added to contact "{record.name}"'
+
+    def get_all_contacts(self):
+        return '\n'.join([repr(contact) for contact in self.address_book.get_all_contacts()])
 
     def complete_work_on_record(self):
         self.address_book.add_record(self.context)
         self.context = None
-        return 'Contact saved successfully'
+        return Fore.GREEN + 'Contact saved successfully'
 
     def cancel_work_on_record(self):
         self.context = None
-        return 'Creating contact canceled'
+        return Fore.RED + 'Creating contact canceled'
+
     
     def add_note(self, value):
         note = Note(Title(value))
@@ -180,7 +197,6 @@ class InputProcessor(UserDict):
 
     def get_notes_by_term(self, term):
         return "\n".join([repr(note) for note in self.note_book.find_note_by_term(term)])
-
 
     @input_error
     def edit_contact(self, contact_name: str):

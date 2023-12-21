@@ -3,12 +3,14 @@ from .field import Field
 
 
 class Birthday(Field):
-
-    @Field.value.setter
+    @property
+    def value(self):
+        return self.__value
+    @value.setter
     def value(self, value):
         today = datetime.now().date()
         try:
-            birthday = datetime.strptime(value, '%d-%m-%Y').date()
+            birthday = datetime.strptime(value, '%d.%m.%Y').date()
         except ValueError:
             birthday = None
         if birthday is not None and birthday < today:
