@@ -13,7 +13,7 @@ from ..models.name import Name
 from ..models.record import Record
 from ..models.birthday import Birthday
 from ..models.email import Email, EmailInvalidFormatError
-
+from ..utils.sort import start
 
 def input_error(func):
     def inner(*args, **kwargs):
@@ -43,6 +43,7 @@ class InputProcessor(UserDict):
             'hello': lambda args: 'Hello',
             'add-contact': lambda args: self.create_contact(*args),
             'edit-contact': lambda args: self.edit_contact(*args),
+            'sort-files' : lambda args: self.sort(),
             'add-note': lambda args: self.add_note(*args),
             'edit-note': lambda args: self.edit_note(*args),
             'get-all-notes': lambda args: self.get_all_notes(),
@@ -50,7 +51,7 @@ class InputProcessor(UserDict):
             'get-note-by-title': lambda args: self.get_note_by_title(*args),
             'get-notes-by-tag': lambda args: self.get_notes_by_tag(*args),
             'get-notes-by-term': lambda args: self.get_notes_by_term(*args),
-        }
+
 
         self.data[Record] = {
             'set-phones': lambda args: self.add_phone(*args),
@@ -82,6 +83,16 @@ class InputProcessor(UserDict):
         record = Record(Name(name))
         self.context = record
         return f'Creating "{record.name}"'
+    
+    def sort(self, *args):
+        if not args:
+            folder = input("Please enter the folder name: ")
+            if not folder:
+                raise IndexError
+        else:
+            folder = args[0]
+        return start(folder)
+
 
     def add_phone(self, phone: str):
         record = self.context
