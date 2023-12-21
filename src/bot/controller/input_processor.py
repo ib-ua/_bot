@@ -1,6 +1,7 @@
 import copy
 import re
 from colorama import Fore
+from colorama import Fore
 from collections import UserDict
 from typing import List
 from ..models import AddressBook
@@ -9,6 +10,9 @@ from ..models.name import Name
 from ..models.record import Record
 from ..models.birthday import Birthday
 from ..models.email import Email, EmailInvalidFormatError
+from ..models.phone import Phone, PhoneInvalidFormatError
+from ..models.birthday import Birthday, BirthdayInvalidFormatError
+
 from ..models.phone import Phone, PhoneInvalidFormatError
 from ..models.birthday import Birthday, BirthdayInvalidFormatError
 
@@ -81,13 +85,17 @@ class InputProcessor(UserDict):
         record = self.context
         record.add_phone(phone)
         return Fore.GREEN + f'Phone number "{phone}" added to contact "{record.name}"'
+        return Fore.GREEN + f'Phone number "{phone}" added to contact "{record.name}"'
 
+    @input_error
     @input_error
     def add_birthday(self, birthday_str: str):
         record = self.context
         birthday = Birthday(birthday_str)
         record = self.context_value
+        record = self.context_value
         record.add_birthday(birthday)
+        return Fore.GREEN + f'Birthday date "{birthday}" added to contact "{record.name}"'
         return Fore.GREEN + f'Birthday date "{birthday}" added to contact "{record.name}"'
 
     @input_error
@@ -98,9 +106,33 @@ class InputProcessor(UserDict):
         return Fore.GREEN + f'E-mail "{email}" added to contact "{record.name}"'
     
     @input_error
+        return Fore.GREEN + f'E-mail "{email}" added to contact "{record.name}"'
+    
+    @input_error
     def add_address(self, address: str):
         record = self.context
         record.add_address(address)
+        return Fore.GREEN + f'Address "{address}" added to contact "{record.name}"'
+
+    def get_all_contacts(self):
+        records = self.address_book.values()
+        record = [record for record in records]
+        print(f'RECORD{record}')
+        for i in record:
+            print(i)
+        
+        # phone_book = AddressBook(name='data')
+        # print(phone_book)
+        # for name, info in data.items():
+        #     phones = '--Phone numbers:\n'
+        #     if data[name].phones:
+        #         for phone in data[name].phones:
+        #             phones += f'{phone.value}\n'
+        # else:
+        #     phones += 'No phone numbers to display\n'
+        # phone_book += f'\n{name} ->\n{phones}'
+       
+        return
         return Fore.GREEN + f'Address "{address}" added to contact "{record.name}"'
 
     def get_all_contacts(self):
