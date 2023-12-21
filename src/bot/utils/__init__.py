@@ -1,4 +1,4 @@
-from .sort import sort_files
+from .sort import start
 
 
-__all__ = ['sort_files']
+__all__ = ['start']

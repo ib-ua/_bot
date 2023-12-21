@@ -1,6 +1,6 @@
 import os
 import shutil
-import sys
+
 
 def normalize(text):
     char_map = {
@@ -60,17 +60,20 @@ def sort_files(folder_path):
 
     return known_extensions, unknown_extensions
 
-def start(folder):
 
-    known_extensions, unknown_extensions = sort_files(folder)
+if __name__ == "__main__":
+    import sys
 
-    print("Known extensions:")
-    for ext in known_extensions:
-        print(ext)
+    if len(sys.argv) != 2:
+        print("Usage: python sort.py <folder_path>")
+    else:
+        folder_path = sys.argv[1]
+        known_extensions, unknown_extensions = sort_files(folder_path)
 
-    print("\nUnknown extensions:")
-    for ext in unknown_extensions:
-        print(ext)
+        print("Known extensions:")
+        for ext in known_extensions:
+            print(ext)
 
-if __name__ == '__main__':
-    start()  
+        print("\nUnknown extensions:")
+        for ext in unknown_extensions:
+            print(ext)
