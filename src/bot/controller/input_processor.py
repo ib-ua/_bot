@@ -17,8 +17,6 @@ def input_error(func):
             return func(*args, **kwargs)
         except EmailInvalidFormatError:
             return 'Invalid email format.'
-        except IndexError:
-            return "Not enough parameters."
         except ValueError as e:
             error_message = 'Value error occurred.'
             if type(e.args[0]) is dict and 'message' in e.args[0]:
