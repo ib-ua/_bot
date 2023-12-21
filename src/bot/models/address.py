@@ -1,5 +1,5 @@
 from .field import Field
 
 
-class Name(Field):
+class Address(Field):
     pass
