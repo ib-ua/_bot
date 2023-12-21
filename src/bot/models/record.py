@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,date
 from typing import List
 
 from .email import Email
@@ -10,7 +10,7 @@ from .name import Name
 
 
 class Record:
-    def __init__(
+    def init(
             self, name: Name,
             phones: List[Phone] = None,
             birthday: Birthday = None,
@@ -41,9 +41,11 @@ class Record:
         self.address = address
 
     def days_to_birthday(self):
-        birthday = datetime.strptime(self.birthday.value, '%Y-%m-%d').date()
-        today = datetime.now().date()
-        birthday = birthday.replace(year=today.year)
-        if birthday < today:
-            birthday = birthday.replace(year=today.year + 1)
-        return (birthday - today).days
+        if self.birthday is None:
+            return None
+        current_date: date = datetime.now().date()
+        current_year: int = current_date.year
+        current_year_birthday: date = self.birthday.value.replace(year=current_year)
+        if current_year_birthday < current_date:
+            current_year_birthday = current_year_birthday.replace(year=(current_year_birthday.year + 1))
+        return (current_year_birthday - current_date).days

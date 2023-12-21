@@ -50,7 +50,7 @@ class InputProcessor(UserDict):
             'hello': lambda args: 'Hello',
             'add-contact': lambda args: self.create_contact(*args),
             'edit-contact': lambda args: self.edit_contact(*args),
-            'show-contacts': lambda args: self.get_all_contacts(*args)
+            'show-contacts': lambda args: self.get_all_contacts(*args),
             'sort-files' : lambda args: self.sort(),
             'add-note': lambda args: self.add_note(*args),
             'edit-note': lambda args: self.edit_note(*args),

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,date
 from .field import Field
 
 
@@ -8,7 +8,7 @@ class Birthday(Field):
         return self.__value
     @value.setter
     def value(self, value):
-        today = datetime.now().date()
+        today: date = datetime.now().date()
         try:
             birthday = datetime.strptime(value, '%d.%m.%Y').date()
         except ValueError:
@@ -18,6 +18,7 @@ class Birthday(Field):
         else:
             raise BirthdayInvalidFormatError('Invalid birthday format. Please enter the birthday'
                                              ' in the format YYYY-MM-DD')
+            
 
 
 class BirthdayInvalidFormatError(Exception):
