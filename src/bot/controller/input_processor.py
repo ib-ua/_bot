@@ -1,7 +1,6 @@
 import copy
 import re
 from colorama import Fore
-from colorama import Fore
 from collections import UserDict
 from typing import List
 from ..models import AddressBook
