@@ -1,37 +1,15 @@
+from typing import List
+
+from .tag import Tag
+from .title import Title
+from .content import Content
+
 class Note:
 
-    def __init__(self, content, title, tags):
-        if content and isinstance(content, str):
-            self.__content = content
-        else:
-            self.__content = None
-
-        if title and isinstance(title, str):
-            self.__title = title
-        else:
-            self.__title = None
-
-        self.__tags = tags if tags else []
-
-    @property
-    def content(self):
-        return self.__content
-    
-    @property
-    def title(self):
-        return self.__title
-    
-    @property
-    def tags(self):
-        return self.__tags
-    
-    @content.setter
-    def content(self, content):
-        self.__content = content if (content and isinstance(content, str)) else None
-    
-    @title.setter
-    def title(self, title):
-        self.__title = title if (title and isinstance(title, str)) else None
+    def __init__(self, title: Title, content: Content = None,  tags: List[Tag] = None):
+        self.content = content
+        self.title = title
+        self.tags = tags if tags else []
     
     def edit_content(self, content):
         self.content = content
@@ -39,21 +17,24 @@ class Note:
     def edit_title(self, title):
         self.title = title
 
-    def add_tag(self, tag):
-        if tag in self.__tags:
-            return False
-        self.__tags.append(tag)
-        return True
+    def add_tag(self, new_tag: Tag):
+        for tag in self.tags:
+            if tag.value == new_tag.value:
+                raise ValueError({'message': 'Tag already exists'})
+        self.tags.append(new_tag)
 
-    def delete_tag(self, tag):
-        if tag in self.__tags:
-            self.__tags.remove(tag)
+    def delete_tag(self, tag: Tag):
+        if tag in self.tags:
+            self.tags.remove(tag)
             return True
-        return False
+        raise ValueError({'message': 'Tag does not exist'})
+    
+    def __repr__(self) -> str:
+        return f'\n{self.title}\n\n{self.content}\n\n{", ".join([tag.value for tag in self.tags])}\n'
 
     def __eq__(self, note):
         if isinstance(note, Note):
-            return self.content == note.content and self.title.lower() == note.title.lower()
+            return self.content == note.content and self.title == note.title
         return False
         
     
