@@ -12,14 +12,9 @@ from ..models.birthday import Birthday
 from ..models.email import Email, EmailInvalidFormatError
 from ..models.phone import Phone, PhoneInvalidFormatError
 from ..models.birthday import Birthday, BirthdayInvalidFormatError
-
 from ..models.phone import Phone, PhoneInvalidFormatError
 from ..models.birthday import Birthday, BirthdayInvalidFormatError
 
-
-default = 'default'
-record_create = 'record_create'
-record_edit = 'record_edit'
 
 
 def input_error(func):
@@ -32,7 +27,6 @@ def input_error(func):
             error_message = 'Value error occurred.'
             if type(e.args[0]) is dict and 'message' in e.args[0]:
                 error_message = e.args[0]['message']
-
             return error_message
         except BirthdayInvalidFormatError:
             return Fore.RED + 'Invalid birthday format. Please enter the birthday in the format DD.MM.YYYY'
@@ -52,8 +46,7 @@ class InputProcessor(UserDict):
             'exit': lambda args: self.address_book.close(),
             'hello': lambda args: 'Hello',
             'add-contact': lambda args: self.create_contact(*args),
-            'edit-contact': lambda args: self.edit_contact(*args)
-,
+            'edit-contact': lambda args: self.edit_contact(*args),
             'show-contacts': lambda args: self.get_all_contacts(*args)
         }
 
@@ -74,6 +67,7 @@ class InputProcessor(UserDict):
         [command, *args] = re.split(r'\s+', user_input.strip())
         return self.data.get(type(self.context), self.data[None]).get(command, lambda x: "Command not found")(args)
 
+    @input_error
     def create_contact(self, name: str):
         record = Record(Name(name))
         self.context = record
@@ -85,17 +79,12 @@ class InputProcessor(UserDict):
         record = self.context
         record.add_phone(phone)
         return Fore.GREEN + f'Phone number "{phone}" added to contact "{record.name}"'
-        return Fore.GREEN + f'Phone number "{phone}" added to contact "{record.name}"'
 
-    @input_error
     @input_error
     def add_birthday(self, birthday_str: str):
         record = self.context
         birthday = Birthday(birthday_str)
-        record = self.context_value
-        record = self.context_value
         record.add_birthday(birthday)
-        return Fore.GREEN + f'Birthday date "{birthday}" added to contact "{record.name}"'
         return Fore.GREEN + f'Birthday date "{birthday}" added to contact "{record.name}"'
 
     @input_error
@@ -106,33 +95,9 @@ class InputProcessor(UserDict):
         return Fore.GREEN + f'E-mail "{email}" added to contact "{record.name}"'
     
     @input_error
-        return Fore.GREEN + f'E-mail "{email}" added to contact "{record.name}"'
-    
-    @input_error
     def add_address(self, address: str):
         record = self.context
         record.add_address(address)
-        return Fore.GREEN + f'Address "{address}" added to contact "{record.name}"'
-
-    def get_all_contacts(self):
-        records = self.address_book.values()
-        record = [record for record in records]
-        print(f'RECORD{record}')
-        for i in record:
-            print(i)
-        
-        # phone_book = AddressBook(name='data')
-        # print(phone_book)
-        # for name, info in data.items():
-        #     phones = '--Phone numbers:\n'
-        #     if data[name].phones:
-        #         for phone in data[name].phones:
-        #             phones += f'{phone.value}\n'
-        # else:
-        #     phones += 'No phone numbers to display\n'
-        # phone_book += f'\n{name} ->\n{phones}'
-       
-        return
         return Fore.GREEN + f'Address "{address}" added to contact "{record.name}"'
 
     def get_all_contacts(self):
