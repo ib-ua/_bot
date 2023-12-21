@@ -3,7 +3,7 @@ from .field import Field
 
 
 class Email(Field):
-
+    
     @Field.value.setter
     def value(self, value):
         pattern = r"[A-Za-z][A-Za-z0-9._]+@[A-Za-z]+\.[A-Za-z]{2,}"

@@ -14,5 +14,6 @@ class DataTransferService:
         return None
 
     def save_data(self, data):
+        print(self,data)
         with open(self.filename, 'wb') as file:
             dump(data, file)

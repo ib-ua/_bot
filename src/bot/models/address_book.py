@@ -15,7 +15,7 @@ class AddressBook(UserDict):
         self.data_transfer_service.save_data(self.data)
 
     def add_record(self, record):
-        self.data[record.name.value] = record
+        self.data[record] = record
         self.save_data()
 
     def del_record(self, name):

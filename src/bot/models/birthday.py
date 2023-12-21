@@ -8,7 +8,7 @@ class Birthday(Field):
     def value(self, value):
         today = datetime.now().date()
         try:
-            birthday = datetime.strptime(value, '%Y-%m-%d').date()
+            birthday = datetime.strptime(value, '%d-%m-%Y').date()
         except ValueError:
             birthday = None
         if birthday is not None and birthday < today:
