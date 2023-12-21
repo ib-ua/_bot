@@ -3,8 +3,11 @@ from .field import Field
 
 
 class Email(Field):
-    
-    @Field.value.setter
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
     def value(self, value):
         pattern = r"[A-Za-z][A-Za-z0-9._]+@[A-Za-z]+\.[A-Za-z]{2,}"
         if re.match(pattern, value) is not None:

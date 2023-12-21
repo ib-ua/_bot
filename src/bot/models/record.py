@@ -1,10 +1,24 @@
 from datetime import datetime
+from typing import List
+
+from .email import Email
+from .birthday import Birthday
+from .phone import Phone
+from .address import Address
+from .name import Name
+
 
 
 class Record:
-    def __init__(self, name, birthday=None, email=None, address=None):
+    def __init__(
+            self, name: Name,
+            phones: List[Phone] = None,
+            birthday: Birthday = None,
+            email: Email = None,
+            address: Address = None
+    ):
         self.name = name
-        self.phones = []
+        self.phones = [] if phones is None else phones
         self.birthday = birthday
         self.email = email
         self.address = address

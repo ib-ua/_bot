@@ -1,4 +1,5 @@
 class Field:
+
     def __init__(self, value):
         self.__value = None
         self.value = value
@@ -10,3 +11,6 @@ class Field:
     @value.setter
     def value(self, value):
         self.__value = value
+
+    def __str__(self):
+        return str(self.value)

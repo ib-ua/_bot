@@ -12,6 +12,6 @@ class Bot:
         while self.address_book.is_open:
             print(
                 self.processor.process(
-                    input(f'Enter command:  { ", ".join(self.processor.get_input_message()) }\n')
+                    input(f'Enter command:  { ", ".join(self.processor.get_commands()) }\n')
                 )
             )
