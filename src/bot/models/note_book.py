@@ -1,75 +1,40 @@
-from typing import Dict
+from collections import UserDict
+from typing import List
+import re
 
+from .note import Note
 
-class NoteBook:
-    def __init__(self):
-        self.__notes: Dict[str, int] = {}
+class NoteBook(UserDict[str, Note]):
+    
+    def add_note(self, new_note: Note) -> None:
+        self.data[new_note.title.value] = new_note
+        
+    def find_note_by_title(self, title: str) -> Note:
+        note = self.data.get(title)
+        if not note:
+            raise ValueError({'message': 'No note was found'})
+        return note
 
-    @property
-    def notes(self):
-        return self.__notes
-
-    @notes.setter
-    def notes(self, notes):
-        if notes is not None and type(notes) is dict:
-            self.__notes = notes
-        else:
-            raise ValueError("Invalid type for notes or notes are empty")
-
-    def add_note(self, new_note, new_author):
-        if new_note is None or new_author is None:
-            raise ValueError("Arguments are empty")
-
-        if new_author in self.__notes:
-            self.__notes[new_author].append(new_note)
-        else:
-            self.__notes[new_author] = [new_note]
-        return self
-
-    def find_notes_by_author(self, author):
-        found_notes = self.__notes.get(author, [])
-        if not found_notes:
-            return None
+    def find_notes_by_tag(self, tag_term: str) -> List[Note]:
+        found_notes = []
+        for note in self.data.values():
+            for tag in note.tags:
+                if tag_term == tag.value:
+                    found_notes.append(note)
+                    break
         return found_notes
-
-    def find_notes_by_author_title(self, author, title):
-        notes_by_author = self.find_notes_by_author(author)
-        if notes_by_author is not None:
-            found_notes = [note for note in notes_by_author if note.title.lower() == title.lower()]
-            if not found_notes:
-                return None
-            return found_notes
-        else:
-            return None
-
-    def find_notes_by_title(self, title):
-        all_notes = [note for notes_list in self.__notes.values() for note in notes_list]
-        found_notes = [note for note in all_notes if note.title.lower() == title.lower()]
-        if not found_notes:
-            return None
-        return found_notes
-
-    def find_notes_by_tag(self, tag):
-        all_notes = [note for notes_list in self.__notes.values() for note in notes_list]
-        found_notes = [note for note in all_notes if note.tag.lower() == tag.lower()]
-        if not found_notes:
-            return None
-        return found_notes
-
-    def sort_notes_by_tags(self):
-        sorted_book = NoteBook()
-
-        for author, notes in self.__notes.items():
-            sorted_notes = sorted(notes, key=lambda note: tuple(note.tags))
-            for _note in sorted_notes:
-                sorted_book.add_note(_note, author)
-
-        return sorted_book
 
     def delete_note(self, note):
-        for author, notes in self.__notes.items():
-            for existing_note in notes:
-                if existing_note == note:
-                    notes.remove(existing_note)
-                    return True
-        return False
+        try:
+            del self.data[note.title.value]
+        except:
+            raise ValueError({'message': 'No note was found'})
+        
+    def find_note_by_term(self, term):
+        found_notes = []
+        for note in self.data.values():
+            for field in [note.title, note.content, *note.tags]:
+                if re.search(term, field.value, re.IGNORECASE):
+                    found_notes.append(note)
+                    break
+        return found_notes
