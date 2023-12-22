@@ -10,5 +10,5 @@ class Title(Field):
     @value.setter
     def value(self, value):
         if not value:
-            raise ValueError("Empty value value")
+            raise ValueError("Empty value")
         self.__value = value

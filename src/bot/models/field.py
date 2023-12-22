@@ -14,3 +14,6 @@ class Field:
 
     def __str__(self):
         return str(self.value)
+
+    def __format__(self, format_spec):
+        return str(self.value)

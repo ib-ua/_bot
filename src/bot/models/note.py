@@ -4,16 +4,21 @@ from .tag import Tag
 from .title import Title
 from .content import Content
 
-class Note:
 
-    def __init__(self, title: Title, content: Content = None,  tags: List[Tag] = None):
-        self.content = content
+class Note:
+    def __init__(
+            self,
+            title: Title,
+            content: Content = None,
+            tags: List[Tag] = None
+    ):
         self.title = title
+        self.content = content
         self.tags = tags if tags else []
-    
+
     def edit_content(self, content):
         self.content = content
-    
+
     def edit_title(self, title):
         self.title = title
 
@@ -28,7 +33,7 @@ class Note:
             self.tags.remove(tag)
             return True
         raise ValueError({'message': 'Tag does not exist'})
-    
+
     def __repr__(self) -> str:
         return f'\n{self.title}\n\n{self.content}\n\n{", ".join([tag.value for tag in self.tags])}\n'
 
@@ -36,5 +41,3 @@ class Note:
         if isinstance(note, Note):
             return self.content == note.content and self.title == note.title
         return False
-        
-    
