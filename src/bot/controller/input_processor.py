@@ -1,5 +1,6 @@
 import copy
 import re
+from rich.table import Table
 from colorama import Fore
 from collections import UserDict
 from typing import List
@@ -21,7 +22,12 @@ def input_error(func):
     def inner(*args, **kwargs):
         error_message = f'{Fore.RED}'
         try:
-            return f'{Fore.GREEN}{func(*args, **kwargs)}'
+            result = func(*args, **kwargs)
+            if type(result) is str:
+                return f'{Fore.GREEN}{result}'
+            else:
+                return result
+
         except ValueError as e:
             if type(e.args[0]) is dict and 'message' in e.args[0]:
                 error_message += e.args[0]['message']
@@ -41,6 +47,40 @@ def input_error(func):
     return inner
 
 
+def create_records_view(records: List[Record], title: str = 'Contacts'):
+    table = Table(title=title)
+    table.add_column("Name", justify="left", no_wrap=True, style="cyan")
+    table.add_column("Address", justify="left")
+    table.add_column("Birthday", justify="center", no_wrap=True)
+    table.add_column("Email", justify="center", no_wrap=True)
+    table.add_column("Phones", justify="center")
+
+    for record in records:
+        table.add_row(
+            str(record.name),
+            str(record.address) if record.address else "-",
+            str(record.birthday) if record.birthday else "-",
+            str(record.email) if record.email else "-",
+            ", ".join([str(phone) for phone in record.phones]) if len(record.phones) else "-"
+        )
+    return table
+
+
+def create_notes_view(notes: List[Note], title: str = 'Notes'):
+    table = Table(title=title)
+    table.add_column("Title", justify="center", no_wrap=True, style="cyan")
+    table.add_column("Content", justify="left")
+    table.add_column("Tags", justify="center")
+
+    for note in notes:
+        table.add_row(
+            str(note.title),
+            str(note.content) if note.content else "-",
+            ", ".join([str(tag) for tag in note.tags]) if len(note.tags) else "-"
+        )
+    return table
+
+
 class InputProcessor(UserDict):
     def __init__(self, address_book: AddressBook, note_book: NoteBook):
         super().__init__()
@@ -56,7 +96,9 @@ class InputProcessor(UserDict):
             'add-contact': lambda args: self.create_contact(*args),
             'edit-contact': lambda args: self.edit_contact(*args),
             'get-all-contacts': lambda args: self.get_all_contacts(),
-            'get-all-contacts-by-term': lambda args: self.get_contacts_by_term(*args),
+            'get-contacts-by-term': lambda args: self.get_contacts_by_term(*args),
+            'get-contacts-by-days-to-birthday': lambda args: self.get_contacts_by_days_to_birthday(*args),
+            'get-contact-by-name': lambda args: self.get_contact_by_name(*args),
             'add-note': lambda args: self.add_note(*args),
             'edit-note': lambda args: self.edit_note(*args),
             'get-all-notes': lambda args: self.get_all_notes(),
@@ -135,16 +177,17 @@ class InputProcessor(UserDict):
         return f'Address "{address}" added to contact "{record.name}"'
 
     def get_all_contacts(self):
-        records_repr = "\n".join([repr(contact) for contact in self.address_book.get_all_contacts()])
-        return f'\n\n{records_repr}\n\n'
+        return create_records_view(self.address_book.get_all_contacts(), 'All Contacts')
 
     def get_contacts_by_term(self, term):
-        return "\n".join([repr(contact) for contact in self.address_book.find_contacts_by_term(term)])
+        return create_records_view(self.address_book.find_contacts_by_term(term),
+                                   f'All Contacts that\'s matches "{term}"')
 
     def complete_work_on_record(self):
-        self.address_book.add_record(self.context)
+        record = self.context
+        self.address_book.add_record(record)
         self.context = None
-        return 'Contact saved successfully'
+        return create_records_view([record], f'Contact "{record.name}" saved successfully')
 
     def cancel_work_on_record(self):
         self.context = None
@@ -163,9 +206,10 @@ class InputProcessor(UserDict):
         return f'Start editing note "{title}"'
 
     def complete_work_on_note(self):
-        self.note_book.add_note(self.context)
+        note = self.context
+        self.note_book.add_note(note)
         self.context = None
-        return 'Note saved successfully'
+        return create_notes_view([note], f'Note "{note.title}" saved successfully')
 
     def cancel_work_on_note(self):
         self.context = None
@@ -182,12 +226,12 @@ class InputProcessor(UserDict):
         return f'Tag "{tag}" was added successfully to note "{self.context.title}"'
 
     def get_all_notes(self):
-        return "\n".join([repr(note) for note in self.note_book.values()])
+        return create_notes_view(list(self.note_book.values()), 'All Notes')
 
     def remove_note(self, value):
         note = self.note_book.find_note_by_title(value)
         self.note_book.delete_note(note)
-        return 'Note was successfully deleted'
+        return f'Note {value} was successfully deleted'
 
     def remove_tag(self, value):
         for tag in self.context.tags:
@@ -204,13 +248,13 @@ class InputProcessor(UserDict):
         return f'Failed to delete phone "{value}"'
 
     def get_note_by_title(self, title):
-        return repr(self.note_book.find_note_by_title(title))
+        return create_notes_view([self.note_book.find_note_by_title(title)], f'Note "{title}"')
 
     def get_notes_by_tag(self, tag):
-        return "\n".join([repr(note) for note in self.note_book.find_notes_by_tag(tag)])
+        return create_notes_view(self.note_book.find_notes_by_tag(tag), f'All Notest that\'s has tag "{tag}"')
 
     def get_notes_by_term(self, term):
-        return "\n".join([repr(note) for note in self.note_book.find_note_by_term(term)])
+        return create_notes_view(self.note_book.find_note_by_term(term), f'All Notest that\'s matches "{term}"')
 
     @input_error
     def edit_contact(self, contact_name: str):
@@ -222,3 +266,16 @@ class InputProcessor(UserDict):
     def stop(self):
         self.is_running = False
         return 'Good bye!'
+
+    @input_error
+    def get_contact_by_name(self, name):
+        return create_records_view([self.address_book.find_contact_by_name(name)], 'Contact for "name')
+
+    @input_error
+    def get_contacts_by_days_to_birthday(self, days_to_birthday_str: str):
+        contacts = self.address_book.get_all_contacts()
+        days_to_birthday = int(days_to_birthday_str)
+        return create_records_view(
+            [record for record in contacts if record.days_to_birthday() == days_to_birthday],
+            f'Contacts that have birthday in {days_to_birthday_str}'
+        )

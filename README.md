@@ -24,9 +24,11 @@ The bot can be interacted with using certain commands from cli:
   - `set-address`: Set address for contact.
   - `apply`: Apply changes for contact.
   - `discard`: Discard changes for contact.
-- `remove-contact <contact_name>`: Removes contact with provided name 
+- `remove-contact <contact_name>`: Removes contact with provided name
+- `get-contact-by-name <contact_name>`: Shows contact with provided name 
 - `get-all-contacts`: Shows all contacts from address book
-- `get-contacts-by-term <term>`: Shows all contacts where any field has match with term 
+- `get-contacts-by-days-to-birthday <days>`: Show contact who has a birthday in specified days 
+- `get-contacts-by-term <term>`: Shows contacts where any field has match with term 
 
 ### Notes Book Command
 
@@ -46,7 +48,7 @@ The bot can be interacted with using certain commands from cli:
 
 The project uses Python 3.9.13 and has the following Python packages installed:
 
-```py -m pip install t21_bot```
+```py -m pip install -i https://test.pypi.org/simple/ t21_bot```
 
 ## Running the tests
 

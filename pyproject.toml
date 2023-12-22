@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "t21_bot"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
     { name="Ievgen Bardadym", email="ievgen.bardadym@gmail.com" },
     { name="Zakhar Kryverko", email="krivtnzakhar1@gmail.com" },
@@ -12,7 +12,7 @@ authors = [
     { name="Denys Petrovskyi", email="dwp2004@icloud.com"},
     { name="Oleksandr Bilokon", email="council.belokon1988@gmail.com"}
 ]
-dependencies = ['colorama', 'prompt_toolkit']
+dependencies = ['colorama', 'prompt_toolkit', 'rich']
 description = "Bot assistant"
 readme = "README.md"
 requires-python = ">=3.9"
