@@ -34,9 +34,6 @@ class Note:
             return True
         raise ValueError({'message': 'Tag does not exist'})
 
-    def __repr__(self) -> str:
-        return f'\n{self.title}\n\n{self.content}\n\n{", ".join([tag.value for tag in self.tags])}\n'
-
     def __eq__(self, note):
         if isinstance(note, Note):
             return self.content == note.content and self.title == note.title

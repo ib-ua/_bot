@@ -40,20 +40,11 @@ class Record:
         self.address = address
 
     def days_to_birthday(self):
-        birthday = datetime.strptime(self.birthday.value, '%Y-%m-%d').date()
+        if self.birthday is None:
+            return None
+        birthday = self.birthday.value
         today = datetime.now().date()
         birthday = birthday.replace(year=today.year)
         if birthday < today:
             birthday = birthday.replace(year=today.year + 1)
         return (birthday - today).days
-
-    def __repr__(self):
-
-        # return f'{self.name}, {self.birthday}, {self.address}, [{", ".join([phone.value for phone in self.phones])}]'
-        return '|{:^15}|{:^20}|{:^20}|{:^20}|{:^60}|'.format(
-            str(self.name),
-            str(self.email),
-            str(self.birthday),
-            str(self.address),
-            ', '.join([str(phone) for phone in self.phones])
-        )

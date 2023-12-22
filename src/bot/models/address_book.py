@@ -35,3 +35,6 @@ class AddressBook(UserDict[str, Record], DataTransferService):
 
     def close(self):
         self.save_data(self.data)
+
+    def find_contact_by_name(self, name):
+        return self.data[name]
