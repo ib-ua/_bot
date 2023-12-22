@@ -8,10 +8,39 @@ The bot assistant uses a command pattern to parse user inputs and perform action
 
 The bot can be interacted with using certain commands from cli:
 
-1. `exit` : Exit from the program.
-2. `<command_2>` : (*Please replace with actual command description*).
-3. .
-4. .
+### Common Bot's Commands
+
+- `hello`: Geet user in response.
+- `exit`: Exit from the program.
+- `sort-files <path>`: Sort files in selected directory by categories.
+
+### Contacts Book Commands
+
+- `add-contact/edit-contact <contact_name>`: Create/Edit contact.
+  - `add-phone`: Add phone to contact's phone list.
+  - `remove-phone`: Remove phone from contact's phone list. 
+  - `set-birthday`: Set contact birthday.
+  - `set-email`: Set contact email.
+  - `set-address`: Set address for contact.
+  - `apply`: Apply changes for contact.
+  - `discard`: Discard changes for contact.
+- `remove-contact <contact_name>`: Removes contact with provided name 
+- `get-all-contacts`: Shows all contacts from address book
+- `get-contacts-by-term <term>`: Shows all contacts where any field has match with term 
+
+### Notes Book Command
+
+- `add-note/edit-note <note_title>`: Create/Edit note with name
+  - `set-content`: Set content to note,
+  - `add-tag`: Add tag to note,
+  - `remove-tag`: Remove tag from note,
+  - `apply`: Apply changes for note,
+  - `discard`: Discard changes for note,
+- `remove-note <note_title>`: Removes note with provided title
+- `get-note-by-title <title>'`: Shows note with provided title
+- `get-all-notes`: Shows all notes from Notes Books
+- `get-notes-by-tag <tag>`: Shows all notes with provided tag
+- `get-notes-by-term <term>`: Shows all notes where any field has match with term
 
 ## Setup & Requirements
 

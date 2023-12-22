@@ -1,40 +1,37 @@
+import re
 from collections import UserDict
-from pathlib import Path
+from typing import List
+
+from .record import Record
 from .data_transfer import DataTransferService
 
 
-class AddressBook(UserDict):
-    def __init__(self, name='data'):
+class AddressBook(UserDict[str, Record], DataTransferService):
+    def __init__(self, name):
         super().__init__()
-        self.name = name
-        self.data_transfer_service = DataTransferService(Path(self.name + '.bin'))
-        self.path = None
-        self.is_open = True
+        self.filename = f'{name}_{self.__class__.__name__}.bin'
+        data = self.load_data()
 
-    def save_data(self):
-        self.data_transfer_service.save_data(self.data)
+        if data:
+            self.data.update(data)
 
     def add_record(self, record):
-        self.data[record] = record
-        self.save_data()
+        self.data[record.name.value] = record
 
     def del_record(self, name):
         del self.data[name]
-        self.save_data()
 
-    def iterator(self, n_records):
-        page = {}
-        i = 0
-        for name, record in self.data.items():
-            page[name] = record
-            i += 1
-            if i == n_records:
-                yield page
-                page = {}
-                i = 0
-        if page:
-            yield page
+    def get_all_contacts(self) -> List[Record]:
+        return list(self.data.values())
+
+    def find_contacts_by_term(self, term: str) -> List[Record]:
+        records = []
+        for record in self.data.values():
+            for field in [record.name, record.email, record.address, *record.phones]:
+                if re.search(term, field, re.IGNORECASE):
+                    records.append(record)
+                    break
+        return records
 
     def close(self):
-        self.is_open = False
-        return "Bye!"
+        self.save_data(self.data)

@@ -9,8 +9,10 @@ authors = [
     { name="Ievgen Bardadym", email="ievgen.bardadym@gmail.com" },
     { name="Zakhar Kryverko", email="krivtnzakhar1@gmail.com" },
     { name="Oleksii Tryhub", email="flairim.oll@gmail.com" },
-    { name="Denys Petrovskyi", email="dwp2004@icloud.com"}
+    { name="Denys Petrovskyi", email="dwp2004@icloud.com"},
+    { name="Oleksandr Bilokon", email="council.belokon1988@gmail.com"}
 ]
+dependencies = ['colorama', 'prompt_toolkit']
 description = "Bot assistant"
 readme = "README.md"
 requires-python = ">=3.9"
